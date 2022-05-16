@@ -1,34 +1,36 @@
 package lab.oodp.io.movie;
 
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.Scanner;
+//import java.io.DataInputStream;
+//import java.io.FileInputStream;
+//import java.io.IOException;
 
 import lab.oodp.Keyboard;
 
 public class MovieReader {
-	String fileName = null;
-	Movie[] films = null;
-	
-    public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-    
-	public Movie[] getFilms() {
-		return films;
-	}
+    String fileName = "movies.dat";
+    Movie[] films = null;
 
-	public void start() {
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public Movie[] getFilms() {
+        return films;
+    }
+
+    public void start() {
 
 
         // Get a file name from the user
-    	if(fileName == null) {
-	        System.out.print("Enter a file name: ");
-	        fileName = Keyboard.readInput();
-    	}
+        if(fileName == null) {
+            System.out.print("Enter a file name: ");
+            fileName = Keyboard.readInput();
+        }
 
         // Load the movie data
-       films = loadMovies(fileName);
+        films = loadMovies(fileName);
 
         // Do some stuff with the data to check that its working
         printMoviesArray(films);
@@ -49,9 +51,56 @@ public class MovieReader {
      * @return
      */
     public Movie[] loadMovies(String fileName) {
-    	//TODO: remove return null below, load movies from data file, 
-        
-    	return null;
+
+        //TODO: remove return null below, load movies from data file,
+
+        Movie[] films = new Movie[19];
+
+        File myFile = new File(fileName);
+
+        int i = 0;
+
+//        try (Scanner scanner = new Scanner(myFile)) {
+//            scanner.useDelimiter(",|\\r\\n");
+//
+//            while (scanner.hasNext()) {
+//
+//                String name = scanner.next();
+//                int year = scanner.nextInt();
+//                int lengthInMinutes = scanner.nextInt();
+//                String director = scanner.next();
+//
+//                Movie film = new Movie(name,year,lengthInMinutes,director);
+//
+//                films[i] = film;
+//                i++;
+//
+//            }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(myFile)))
+        {
+            String[] fields = null;
+            String line = null;
+
+            while ((line = reader.readLine()) != null) {
+                fields = line.split(",");
+
+                Movie film = new Movie(fields[0],Integer.valueOf(fields[1]),Integer.valueOf(fields[2]),fields[3]);
+
+                films[i] = film;
+                i++;
+
+            }
+
+        }
+
+        catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+
+
+        return films;
 
     }
 

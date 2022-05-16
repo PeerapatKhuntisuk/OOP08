@@ -1,29 +1,30 @@
 package lab.oodp.io.movie;
 
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 import lab.oodp.Keyboard;
 
 public class MovieWriter {
-	String fileName = null;
+	String fileName = "movies.dat";
 	
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
 
-	public void start() {
+	public void start() throws IOException {
 
 		// Get a file name from the user
+
 		if(fileName ==null) {
 			System.out.print("Enter a file name: ");
 			String fileName = Keyboard.readInput();
 		}
 
+
 		// Create and fill Movies array
 		Movie[] films = getMovieData();
+
 
 		// Saves the movies
 		saveMovies(fileName, films);
@@ -32,11 +33,41 @@ public class MovieWriter {
 	/**
 	 * Saves the movies to the given file.
 	 */
-	protected void saveMovies(String fileName, Movie[] films) {
+	protected void saveMovies(String fileName, Movie[] films) throws IOException {
 		// TODO: save array of movies: films into a file, uncomment sysout below
-		
 
-		//System.out.println("Movies saved successfully to " + fileName + "!");
+		File fileMovies = new File(fileName);
+
+		if (fileMovies.createNewFile())
+		{
+			System.out.println("File created: " + fileMovies.getName());
+		}
+		else
+		{
+			System.out.println("File already exists.");
+		}
+
+		try (BufferedWriter bW = new BufferedWriter(new FileWriter(fileMovies))) {
+
+			for (Movie film : films)
+			{
+				bW.write(String.valueOf(film.getName()));
+				bW.write(",");
+				bW.write(String.valueOf(film.getYear()));
+				bW.write(",");
+				bW.write(String.valueOf(film.getLengthInMinutes()));
+				bW.write(",");
+				bW.write(String.valueOf(film.getDirector()));
+				bW.newLine();
+
+			}
+
+		} catch (IOException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+
+
+		System.out.println("Movies saved successfully to " + fileName + "!");
 	}
 
 	/**
@@ -66,7 +97,7 @@ public class MovieWriter {
 		return films;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		new MovieWriter().start();
 	}
 }
