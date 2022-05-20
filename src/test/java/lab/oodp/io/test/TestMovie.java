@@ -1,8 +1,11 @@
-package lab.oodp.io.test;
+	package lab.oodp.io.test;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +29,7 @@ public class TestMovie {
 	}
 
 	@Test
-	public void testMovieWriteRead() {
+	public void testMovieWriteRead() throws IOException {
 		cw.start();
 		cr.start();
 		Movie[] movies = cw.getMovieData();
